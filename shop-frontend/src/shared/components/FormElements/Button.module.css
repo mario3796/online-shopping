@@ -1,0 +1,25 @@
+button[type='submit'] {
+    background-color: #ff950b;
+    color: #fff;
+    font-size: large;
+    margin: 20px 0px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+button[type='button'] {
+    text-decoration: none;
+    background-color: orange;
+    color: white;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 10px;
+    padding: 5px;
+    font-size: large;
+}
+
+button[type='button']:hover {
+    background-color: #fff;
+    color: orange
+}

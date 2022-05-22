@@ -1,0 +1,10 @@
+.Form {
+    background: orange;
+    border: 1px solid #d67506;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: auto;
+    max-width: 500px;
+    padding: 30px 50px;
+}

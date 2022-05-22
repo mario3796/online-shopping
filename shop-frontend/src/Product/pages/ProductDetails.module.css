@@ -1,0 +1,21 @@
+.product {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 50%;
+    margin: 10px;
+    display: inline-block;
+    border: 2px solid rgb(66, 66, 240);
+    border-radius: 5%;
+    background-color: orange;
+    color: #fff
+}
+
+.product img {
+    width: 75%;
+    height: 500px;
+}
+
+.container {
+    padding: 2px 16px;
+    border-top: 2px solid rgb(66, 66, 240);
+}
