@@ -11,6 +11,7 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner/LoadingSpinne
 import { AuthContext } from '../../shared/context/auth-context';
 import { modalActions } from '../../shared/store/modal-slice';
 import { useHttpClient } from '../../shared/hooks/http-hook';
+import Empty from '../../shared/components/Empty/Empty';
 
 const NewProduct = (props) => {
   const [product, setProduct] = useState({
@@ -19,7 +20,7 @@ const NewProduct = (props) => {
     image: '',
     description: '',
   });
-  
+
   const { isLoading, error, sendRequest } = useHttpClient();
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
@@ -28,9 +29,11 @@ const NewProduct = (props) => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-        const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'products/' + params.id);
-        setProduct({ ...data.product });
-        console.log(data);
+      const data = await sendRequest(
+        process.env.REACT_APP_BACKEND_URL + 'products/' + params.id
+      );
+      setProduct({ ...data.product });
+      console.log(data);
     };
     if (props.editing) {
       fetchProduct();
@@ -55,21 +58,25 @@ const NewProduct = (props) => {
       url = process.env.REACT_APP_BACKEND_URL + 'products';
     }
     const data = await sendRequest(url, method, formData, {
-      'Authorization': authCtx.token
+      Authorization: authCtx.token,
     });
 
-        dispatch(
-          modalActions.editProduct({
-            editing: props.editing,
-            close: () => dispatch(modalActions.close()),
-          })
-        );
-      console.log(data);
-      history.push('/');
-    }
+    dispatch(
+      modalActions.editProduct({
+        editing: props.editing,
+        close: () => dispatch(modalActions.close()),
+      })
+    );
+    console.log(data);
+    history.push('/');
+  };
 
   return isLoading ? (
     <LoadingSpinner />
+  ) : props.editing && !product.title ? (
+    <Empty>
+      <p>No such a Product!</p>
+    </Empty>
   ) : (
     <Form onSubmit={addProductHandler} encType="multipart/form-data">
       {error && <ErrorMessage>{error}</ErrorMessage>}

@@ -19,24 +19,29 @@ const Cart = () => {
 
   const fetchCart = useCallback(async () => {
     const data = await sendRequest(
-      process.env.REACT_APP_BACKEND_URL + 'cart/' + localStorage.getItem('userId'),
-      'GET', null, { Authorization: localStorage.getItem('token') },
+      process.env.REACT_APP_BACKEND_URL +
+        'cart/' +
+        localStorage.getItem('userId'),
+      'GET',
+      null,
+      { Authorization: localStorage.getItem('token') }
     );
     console.log(data);
     setCart({
       items: data.cart,
       totalPrice: data.totalPrice,
     });
-    setIsLoading(false)
+    setIsLoading(false);
   }, [sendRequest]);
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     fetchCart();
   }, [fetchCart]);
 
   const increment = async (productId) => {
-    const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'cart',
+    const data = await sendRequest(
+      process.env.REACT_APP_BACKEND_URL + 'cart',
       'POST',
       JSON.stringify({
         userId: localStorage.getItem('userId'),
@@ -45,7 +50,8 @@ const Cart = () => {
       {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('token'),
-      });
+      }
+    );
     console.log(data);
     fetchCart();
     // setTimeout(() => {
@@ -57,17 +63,18 @@ const Cart = () => {
   };
 
   const decrement = async (productId) => {
-    const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'cart',
+    const data = await sendRequest(
+      process.env.REACT_APP_BACKEND_URL + 'cart',
       'PUT',
       JSON.stringify({
         userId: localStorage.getItem('userId'),
-        productId: productId
+        productId: productId,
       }),
       {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('token'),
       }
-      );
+    );
     console.log(data);
     fetchCart();
 
@@ -87,7 +94,8 @@ const Cart = () => {
 
   const addOrder = async () => {
     setIsLoading(true);
-    const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'orders',
+    const data = await sendRequest(
+      process.env.REACT_APP_BACKEND_URL + 'orders',
       'POST',
       JSON.stringify({
         userId: localStorage.getItem('userId'),
@@ -117,8 +125,12 @@ const Cart = () => {
   const clearCart = async () => {
     setIsLoading(true);
     const data = await sendRequest(
-      process.env.REACT_APP_BACKEND_URL + 'cart/' + localStorage.getItem('userId'),
-      'DELETE', null, { Authorization: localStorage.getItem('token') },
+      process.env.REACT_APP_BACKEND_URL +
+        'cart/' +
+        localStorage.getItem('userId'),
+      'DELETE',
+      null,
+      { Authorization: localStorage.getItem('token') }
     );
     console.log(data);
     dispatch(modalActions.close());

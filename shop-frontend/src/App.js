@@ -18,7 +18,9 @@ import { AuthContext } from './shared/context/auth-context';
 import { modalActions } from './shared/store/modal-slice';
 
 const NewProduct = React.lazy(() => import('./Product/pages/NewProduct'));
-const ProductDetails = React.lazy(() => import('./Product/pages/ProductDetails'));
+const ProductDetails = React.lazy(() =>
+  import('./Product/pages/ProductDetails')
+);
 const ProductList = React.lazy(() => import('./Product/pages/ProductList'));
 const Auth = React.lazy(() => import('./Auth/Auth'));
 const Cart = React.lazy(() => import('./Cart/pages/Cart'));
@@ -32,58 +34,58 @@ function App() {
 
   const routes = (
     <Switch>
-        <Route path="/" exact>
-          <Redirect to="/products" />
-        </Route>
-        <Route path="/new-product">
-          {authCtx.token || localStorage.getItem('token') ? (
-            <NewProduct />
-          ) : (
-            <Redirect to="/" />
-          )}
-        </Route>
-        <Route path="/products" exact>
-          <ProductList />
-        </Route>
-        <Route path="/products/:id">
-          <ProductDetails />
-        </Route>
-        <Route path="/edit-product/:id">
-          {authCtx.token || localStorage.getItem('token') ? (
-            <NewProduct editing />
-          ) : (
-            <Redirect to="/" />
-          )}
-        </Route>
-        <Route path="/cart">
-          {authCtx.token || localStorage.getItem('token') ? (
-            <Cart />
-          ) : (
-            <Redirect to="/" />
-          )}
-        </Route>
-        <Route path="/orders" exact>
-          {authCtx.token || localStorage.getItem('token') ? (
-            <OrderList />
-          ) : (
-            <Redirect to="/" />
-          )}
-        </Route>
-        <Route path="/orders/:id">
-          {authCtx.token || localStorage.getItem('token') ? (
-            <OrderDetails />
-          ) : (
-            <Redirect to="/" />
-          )}
-        </Route>
-        <Route path="/signup">
-          {!authCtx.token ? <Auth /> : <Redirect to="/" />}
-        </Route>
-        <Route path="/login">
-          {!authCtx.token ? <Auth isLogin /> : <Redirect to="/" />}
-        </Route>
-        <Route path="*" component={NotFound} />
-      </Switch>
+      <Route path="/" exact>
+        <Redirect to="/products" />
+      </Route>
+      <Route path="/new-product">
+        {authCtx.token || localStorage.getItem('token') ? (
+          <NewProduct />
+        ) : (
+          <Redirect to="/" />
+        )}
+      </Route>
+      <Route path="/products" exact>
+        <ProductList />
+      </Route>
+      <Route path="/products/:id">
+        <ProductDetails />
+      </Route>
+      <Route path="/edit-product/:id">
+        {authCtx.token || localStorage.getItem('token') ? (
+          <NewProduct editing />
+        ) : (
+          <Redirect to="/" />
+        )}
+      </Route>
+      <Route path="/cart">
+        {authCtx.token || localStorage.getItem('token') ? (
+          <Cart />
+        ) : (
+          <Redirect to="/" />
+        )}
+      </Route>
+      <Route path="/orders" exact>
+        {authCtx.token || localStorage.getItem('token') ? (
+          <OrderList />
+        ) : (
+          <Redirect to="/" />
+        )}
+      </Route>
+      <Route path="/orders/:id">
+        {authCtx.token || localStorage.getItem('token') ? (
+          <OrderDetails />
+        ) : (
+          <Redirect to="/" />
+        )}
+      </Route>
+      <Route path="/signup">
+        {!authCtx.token ? <Auth /> : <Redirect to="/" />}
+      </Route>
+      <Route path="/login">
+        {!authCtx.token ? <Auth isLogin /> : <Redirect to="/" />}
+      </Route>
+      <Route path="*" component={NotFound} />
+    </Switch>
   );
   return (
     <Layout>
@@ -93,9 +95,7 @@ function App() {
       >
         {modal.content}
       </Modal>
-      <Suspense fallback={<LoadingSpinner />}>
-        {routes}
-      </Suspense>
+      <Suspense fallback={<LoadingSpinner />}>{routes}</Suspense>
     </Layout>
   );
 }

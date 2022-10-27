@@ -27,13 +27,17 @@ const OrderList = () => {
     <OrderItem key={item._id} item={item} />
   ));
 
-  return !isLoading ? (orderItems.length === 0 ? (
-    <Empty>
-      <p>No Orders yet!</p>
-    </Empty>
+  return !isLoading ? (
+    orderItems.length === 0 ? (
+      <Empty>
+        <p>No Orders yet!</p>
+      </Empty>
+    ) : (
+      orderItems
+    )
   ) : (
-    orderItems
-  )) : <LoadingSpinner />
+    <LoadingSpinner />
+  );
 };
 
 export default OrderList;

@@ -12,13 +12,15 @@ const ProductItem = (props) => {
   const history = useHistory();
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
-  const { sendRequest } = useHttpClient()
+  const { sendRequest } = useHttpClient();
 
   const deleteProductHandler = async (event) => {
     event.preventDefault();
     const data = await sendRequest(
       process.env.REACT_APP_BACKEND_URL + 'products/' + props.product._id,
-        'DELETE', null, { Authorization: authCtx.token }
+      'DELETE',
+      null,
+      { Authorization: authCtx.token }
     );
     dispatch(modalActions.deleteProduct(() => dispatch(modalActions.close())));
     console.log(data);
@@ -26,7 +28,8 @@ const ProductItem = (props) => {
   };
 
   const addToCart = async () => {
-    const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'cart',
+    const data = await sendRequest(
+      process.env.REACT_APP_BACKEND_URL + 'cart',
       'POST',
       JSON.stringify({
         userId: localStorage.getItem('userId'),

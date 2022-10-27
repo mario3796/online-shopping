@@ -7,12 +7,14 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner/LoadingSpinne
 
 const ProductList = (props) => {
   const [products, setProducts] = useState([]);
-  const { isLoading, sendRequest } = useHttpClient()
+  const { isLoading, sendRequest } = useHttpClient();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'products');
+        const data = await sendRequest(
+          process.env.REACT_APP_BACKEND_URL + 'products'
+        );
         console.log(data);
         setProducts(data.products);
       } catch (err) {

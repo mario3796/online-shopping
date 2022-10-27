@@ -22,7 +22,7 @@ const Auth = (props) => {
     username: '',
     password: '',
   });
-  const { isLoading, error, sendRequest } = useHttpClient()
+  const { isLoading, error, sendRequest } = useHttpClient();
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -31,8 +31,8 @@ const Auth = (props) => {
       url = process.env.REACT_APP_BACKEND_URL + 'login';
     }
     const data = await sendRequest(url, 'POST', JSON.stringify(user), {
-      'Content-Type': 'application/json'
-    })
+      'Content-Type': 'application/json',
+    });
 
     if (props.isLogin) {
       authCtx.login(data);
@@ -41,7 +41,7 @@ const Auth = (props) => {
 
     dispatch(modalActions.signup(() => dispatch(modalActions.close())));
     history.replace('/login');
-};
+  };
 
   return isLoading ? (
     <LoadingSpinner />
