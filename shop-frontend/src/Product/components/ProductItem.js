@@ -18,9 +18,7 @@ const ProductItem = (props) => {
     event.preventDefault();
     const data = await sendRequest(
       process.env.REACT_APP_BACKEND_URL + 'products/' + props.product._id,
-        'DELETE',
-        null,
-        { Authorization: authCtx.token },
+        'DELETE', null, { Authorization: authCtx.token }
     );
     dispatch(modalActions.deleteProduct(() => dispatch(modalActions.close())));
     console.log(data);

@@ -54,7 +54,6 @@ const NewProduct = (props) => {
       method = 'POST';
       url = process.env.REACT_APP_BACKEND_URL + 'products';
     }
-    console.log(authCtx.token)
     const data = await sendRequest(url, method, formData, {
       'Authorization': authCtx.token
     });
