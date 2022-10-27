@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { AuthContext } from '../shared/context/auth-context';
 import { modalActions } from '../shared/store/modal-slice';
+import { useHttpClient } from '../shared/hooks/http-hook';
 
 import LoadingSpinner from '../shared/components/LoadingSpinner/LoadingSpinner';
 import ErrorMessage from '../shared/components/Error/ErrorMessage';
@@ -21,8 +22,7 @@ const Auth = (props) => {
     username: '',
     password: '',
   });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, error, sendRequest } = useHttpClient()
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -30,34 +30,18 @@ const Auth = (props) => {
     if (props.isLogin) {
       url = process.env.REACT_APP_BACKEND_URL + 'login';
     }
-    try {
-      setIsLoading(true);
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      });
-      const data = await response.json();
-      console.log(data);
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-      if (props.isLogin) {
-        authCtx.login(data);
-        return history.replace('/');
-      }
+    const data = await sendRequest(url, 'POST', JSON.stringify(user), {
+      'Content-Type': 'application/json'
+    })
 
-      dispatch(modalActions.signup(() => dispatch(modalActions.close())));
-      setIsLoading(false);
-      history.replace('/login');
-    } catch (err) {
-      console.log(err);
-      setIsLoading(false);
-      setError(err.message || 'something went wrong!');
+    if (props.isLogin) {
+      authCtx.login(data);
+      return history.replace('/');
     }
-  };
+
+    dispatch(modalActions.signup(() => dispatch(modalActions.close())));
+    history.replace('/login');
+};
 
   return isLoading ? (
     <LoadingSpinner />

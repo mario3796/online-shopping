@@ -1,28 +1,26 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Empty from '../../shared/components/Empty/Empty';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 import classes from './ProductDetails.module.css';
+import Empty from '../../shared/components/Empty/Empty';
 import LoadingSpinner from '../../shared/components/LoadingSpinner/LoadingSpinner';
 
 const ProductDetails = (props) => {
   const [product, setProduct] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const params = useParams();
+  const { isLoading, sendRequest } = useHttpClient();
 
   useEffect(() => {
-    setIsLoading(true);
     const fetchProduct = async () => {
-      const response = await fetch(
+      const data = await sendRequest(
         process.env.REACT_APP_BACKEND_URL + 'products/' + params.id
       );
-      const data = await response.json();
       setProduct(data.product);
       console.log(data);
-      setIsLoading(false);
     };
     fetchProduct();
-  }, [params, setProduct]);
+  }, [params, sendRequest, setProduct]);
 
   return !product && !isLoading ? (
     <Empty>

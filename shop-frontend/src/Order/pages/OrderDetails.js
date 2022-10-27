@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 import classes from './OrderDetails.module.css';
 import Empty from '../../shared/components/Empty/Empty';
@@ -7,19 +8,16 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner/LoadingSpinne
 
 const OrderDetails = (props) => {
   const [order, setOrder] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, sendRequest } = useHttpClient();
 
   const params = useParams();
 
   const fetchOrder = useCallback(async () => {
-    setIsLoading(true);
-    const response = await fetch(
+    const data = await sendRequest(
       process.env.REACT_APP_BACKEND_URL + 'orders/' + params.id
     );
-    const data = await response.json();
     setOrder(data.order);
-    setIsLoading(false);
-  }, [params.id]);
+  }, [params.id, sendRequest]);
 
   useEffect(() => {
     fetchOrder();

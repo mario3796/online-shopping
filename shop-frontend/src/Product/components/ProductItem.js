@@ -1,47 +1,44 @@
 import { useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import classes from './ProductItem.module.css';
 
+import classes from './ProductItem.module.css';
 import { AuthContext } from '../../shared/context/auth-context';
 import { modalActions } from '../../shared/store/modal-slice';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import Button from '../../shared/components/FormElements/Button';
 
 const ProductItem = (props) => {
   const history = useHistory();
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
+  const { sendRequest } = useHttpClient()
 
   const deleteProductHandler = async (event) => {
     event.preventDefault();
-    const response = await fetch(
+    const data = await sendRequest(
       process.env.REACT_APP_BACKEND_URL + 'products/' + props.product._id,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: authCtx.token,
-        },
-      }
+        'DELETE',
+        null,
+        { Authorization: authCtx.token },
     );
-    const data = await response.json();
     dispatch(modalActions.deleteProduct(() => dispatch(modalActions.close())));
     console.log(data);
     history.replace('/');
   };
 
   const addToCart = async () => {
-    const response = await fetch(process.env.REACT_APP_BACKEND_URL + 'cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: authCtx.token,
-      },
-      body: JSON.stringify({
+    const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'cart',
+      'POST',
+      JSON.stringify({
         userId: localStorage.getItem('userId'),
         productId: props.product._id,
       }),
-    });
-    const data = await response.json();
+      {
+        'Content-Type': 'application/json',
+        Authorization: authCtx.token,
+      }
+    );
     console.log(data);
   };
 

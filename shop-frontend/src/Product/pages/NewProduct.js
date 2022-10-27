@@ -10,6 +10,7 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner/LoadingSpinne
 
 import { AuthContext } from '../../shared/context/auth-context';
 import { modalActions } from '../../shared/store/modal-slice';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const NewProduct = (props) => {
   const [product, setProduct] = useState({
@@ -18,9 +19,8 @@ const NewProduct = (props) => {
     image: '',
     description: '',
   });
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
+  
+  const { isLoading, error, sendRequest } = useHttpClient();
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -28,24 +28,14 @@ const NewProduct = (props) => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      try {
-        const response = await fetch(
-          process.env.REACT_APP_BACKEND_URL + 'products/' + params.id
-        );
-        const data = await response.json();
+        const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'products/' + params.id);
         setProduct({ ...data.product });
         console.log(data);
-        if (!response.ok) {
-          throw new Error(data.message);
-        }
-      } catch (err) {
-        setError(err.message || 'something went wrong!');
-      }
     };
     if (props.editing) {
       fetchProduct();
     }
-  }, [params, props.editing, setProduct]);
+  }, [params, props.editing, sendRequest, setProduct]);
 
   const addProductHandler = async (event) => {
     event.preventDefault();
@@ -64,33 +54,20 @@ const NewProduct = (props) => {
       method = 'POST';
       url = process.env.REACT_APP_BACKEND_URL + 'products';
     }
-    try {
-      setIsLoading(true);
-      const response = await fetch(url, {
-        method,
-        headers: {
-          Authorization: authCtx.token,
-        },
-        body: formData,
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-      dispatch(
-        modalActions.editProduct({
-          editing: props.editing,
-          close: () => dispatch(modalActions.close()),
-        })
-      );
+    console.log(authCtx.token)
+    const data = await sendRequest(url, method, formData, {
+      'Authorization': authCtx.token
+    });
+
+        dispatch(
+          modalActions.editProduct({
+            editing: props.editing,
+            close: () => dispatch(modalActions.close()),
+          })
+        );
       console.log(data);
-      setIsLoading(false);
       history.push('/');
-    } catch (err) {
-      setError(err.message || 'something went wrong!');
-      setIsLoading(false);
     }
-  };
 
   return isLoading ? (
     <LoadingSpinner />

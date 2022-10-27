@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 import ProductItem from '../components/ProductItem';
 import Empty from '../../shared/components/Empty/Empty';
@@ -6,24 +7,21 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner/LoadingSpinne
 
 const ProductList = (props) => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, sendRequest } = useHttpClient()
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setIsLoading(true);
-        const response = await fetch(process.env.REACT_APP_BACKEND_URL + 'products');
-        const data = await response.json();
+        const data = await sendRequest(process.env.REACT_APP_BACKEND_URL + 'products');
         console.log(data);
         setProducts(data.products);
-        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchProducts();
-  }, [setProducts]);
+  }, [sendRequest, setProducts]);
 
   let productList = products.map((product) => {
     return <ProductItem key={product._id} product={product} />;
