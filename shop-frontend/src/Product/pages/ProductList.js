@@ -18,20 +18,19 @@ const ProductList = (props) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    const fetchProducts = async (page = 1) => {
+    const fetchProducts = async () => {
       try {
         const data = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL + 'products?page=' + page
-        );
-        setProducts(data.products);
-        setTotalItems(data.totalItems);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    +values.page && setPage(+values.page);
-
-    fetchProducts(page);
+          process.env.REACT_APP_BACKEND_URL + 'products?page=' + +values.page || page
+          );
+          setProducts(data.products);
+          setTotalItems(data.totalItems);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      +values.page && setPage(+values.page);
+      fetchProducts();
   }, [sendRequest, setProducts, values.page, page]);
 
   let productList = products.map((product) => {
