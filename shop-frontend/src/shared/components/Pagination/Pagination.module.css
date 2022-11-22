@@ -1,0 +1,20 @@
+.Pagination {
+    margin-top: 2rem;
+    padding: auto;
+}
+
+.Pagination a {
+    text-decoration: none;
+    color: orange;
+    padding: 0.5rem;
+    border: 1px solid orange;
+    margin-right: 15px;
+    background-color: rgb(66, 66, 240);;
+}
+
+.Pagination a:hover,
+.Pagination a:active,
+.Pagination a.active {
+    color: rgb(66, 66, 240);
+    background-color: orange;
+}
