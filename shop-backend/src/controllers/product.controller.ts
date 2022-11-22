@@ -6,10 +6,22 @@ import Product from '../models/product.model';
 import User from '../models/user.model';
 import HttpError from '../models/http-error.model';
 
-const getProducts = (_req: Request, res: Response) => {
-  Product.find().then((products) => {
-    res.status(200).json({ products: products });
-  });
+const ITEMS_PER_PAGES = 2;
+
+const getProducts = async (req: Request, res: Response) => {
+  const page = Number(req.query.page) || 1;
+  Product.find().countDocuments()
+  .then(totalItems => {
+    return Product.find()
+    .skip((page - 1) * ITEMS_PER_PAGES)
+    .limit(ITEMS_PER_PAGES)
+    .then((products) => {
+      res.status(200).json({
+        totalItems,
+        products
+       });
+    });
+  })
 };
 
 const postProduct = (req: Request, res: Response, next: NextFunction) => {
