@@ -49,7 +49,7 @@ const ProductList = (props) => {
         hasPreviousPage={page > 1}
         nextPage={page + 1}
         previousPage={page - 1}
-        lastPage={totalItems / 2}
+        lastPage={Math.ceil(totalItems / 2)}
       />
     </div>
   ) : (
